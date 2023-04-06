@@ -45,18 +45,17 @@ namespace TugassPABD
 
                                         Console.WriteLine("\nMenu");
                                         Console.WriteLine("1. Melihat Seluruh Data");
-                                        Console.WriteLine("2. Tambah Data");
+                                        Console.WriteLine("2. Tambah Data dan Cari Data");
                                         Console.WriteLine("3. Hapus Data");
-                                        Console.WriteLine("4. Cari Data");
-                                        Console.WriteLine("5. Keluar");
-                                        Console.Write("\nEnter your choice (1-5): ");
+                                        Console.WriteLine("4. Keluar");
+                                        Console.Write("\nEnter your choice (1-4): ");
                                         char ch = Convert.ToChar(Console.ReadLine());
                                         switch (ch)
                                         {
                                             case '1':
                                                 {
                                                     Console.Clear();
-                                                    Console.WriteLine("DATA donatur\n");
+                                                    Console.WriteLine("DATA Donatur\n");
                                                     Console.WriteLine();
                                                     pr.baca(conn);
                                                 }
@@ -64,15 +63,15 @@ namespace TugassPABD
                                             case '2':
                                                 {
                                                     Console.Clear();
-                                                    Console.WriteLine("INPUT DATA donatur\n");
+                                                    Console.WriteLine("INPUT DATA Donatur\n");
                                                     Console.Write("Masukan id donatur : ");
                                                     string id = Console.ReadLine();
                                                     Console.Write("Masukan Nama depan donatur : ");
                                                     string Nmadep = Console.ReadLine();
                                                     Console.Write("Masukan Nama belakang donatur : ");
                                                     string Nmabel = Console.ReadLine();
-                                                    Console.Write("Masukan no telp donatur : ");
-                                                    string notelp = Console.ReadLine();
+                                                    Console.Write("Masukan No Telepon : ");
+                                                    string notlpn = Console.ReadLine();
                                                     if (id.Equals(pr.search(id, conn)))
                                                     {
                                                         Console.WriteLine("Data Sudah Ada");
@@ -81,7 +80,7 @@ namespace TugassPABD
                                                     {
                                                         try
                                                         {
-                                                            pr.insert(id, Nmadep, Nmabel, notelp , conn);
+                                                            pr.insert(id, Nmadep, Nmabel, notlpn, conn);
                                                         }
                                                         catch
                                                         {
@@ -93,7 +92,7 @@ namespace TugassPABD
                                             case '3':
                                                 {
                                                     Console.Clear();
-                                                    Console.WriteLine("Delete DATA donatur\n");
+                                                    Console.WriteLine("Delete DATA Donatur\n");
                                                     Console.Write("Masukan id : ");
                                                     string id = Console.ReadLine();
                                                     Console.WriteLine("Apakah anda yakin ingin menghapus data ini?");
@@ -114,14 +113,6 @@ namespace TugassPABD
                                                 }
                                                 break;
                                             case '4':
-                                                {
-                                                    Console.Write("Masukan id donatur : ");
-                                                    string id = Console.ReadLine();
-
-                                                }
-                                                break;
-
-                                            case '5':
                                                 {
                                                     conn.Close();
                                                     return;
@@ -171,10 +162,10 @@ namespace TugassPABD
             }
             r.Close();
         }
-        public void insert(string id, string Nmadep, string Nmabel,string notelp, SqlConnection con)
+        public void insert(string id, string Nmadep, string Nmabel, string notelp, SqlConnection con)
         {
             string str = "";
-            str = "insert into donatur (id_donatur,nama_depan_donatur, nama_belakang_donatur, notelp_donatur)values(@id,@nmadep , @nmabel, @notelp)";
+            str = "insert into donatur (id_donatur,nama_depan_donatur,nama_belakang_donatur,notelp_donatur)values(@id_donatur,@nama_depan_donatur,@nama_belakang_donatur,@notelp_donatur)";
             SqlCommand cmd = new SqlCommand(str, con);
             cmd.CommandType = CommandType.Text;
 
@@ -182,18 +173,17 @@ namespace TugassPABD
             cmd.Parameters.Add(new SqlParameter("nama_depan_donatur", Nmadep));
             cmd.Parameters.Add(new SqlParameter("nama_belakang_donatur", Nmabel));
             cmd.Parameters.Add(new SqlParameter("notelp_donatur", notelp));
-
             cmd.ExecuteNonQuery();
             Console.WriteLine("Data Berhasil ditambahkan");
         }
         public void delete(string id, SqlConnection con)
         {
             string str = "";
-            str = "delete from donatur where id = @id";
+            str = "delete from donatur where id_donatur = @id_donatur";
             SqlCommand cmd = new SqlCommand(str, con);
             cmd.CommandType = CommandType.Text;
 
-            cmd.Parameters.Add(new SqlParameter("id", id));
+            cmd.Parameters.Add(new SqlParameter("id_donatur", id));
             cmd.ExecuteNonQuery();
             Console.WriteLine("\nData telah dihapus");
 
@@ -201,11 +191,11 @@ namespace TugassPABD
         public string search(string id, SqlConnection con)
         {
             string str = "";
-            string ID = "";
-            str = "select nim from donatur where id = @id";
+            string Id = "";
+            str = "select id from donatur where id_donatur = @id_donatur";
             SqlCommand cmd = new SqlCommand(str, con);
             cmd.CommandType = CommandType.Text;
-            cmd.Parameters.Add(new SqlParameter("id", id));
+            cmd.Parameters.Add(new SqlParameter("id_donatur", id));
             cmd.ExecuteNonQuery();
             SqlDataReader r = cmd.ExecuteReader();
             while (r.Read())
